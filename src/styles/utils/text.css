@@ -1,0 +1,174 @@
+.text-2xs { font-size: var(--font-size-2xs); }
+
+.text-xs { font-size: var(--font-size-xs); }
+
+.text-sm { font-size: var(--font-size-sm); }
+
+.text-md { font-size: var(--font-size-md); }
+
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-xl { font-size: var(--font-size-xl); }
+
+.text-2xl { font-size: var(--font-size-2xl); }
+
+.text-3xl { font-size: var(--font-size-3xl); }
+
+
+/* =========================
+   Font weight: text-
+   ========================= */
+
+.text-light { font-weight: var(--font-weight-light); }
+
+.text-normal { font-weight: var(--font-weight-normal); }
+
+.text-medium { font-weight: var(--font-weight-medium); }
+
+.text-semibold { font-weight: var(--font-weight-semibold); }
+
+.text-bold { font-weight: var(--font-weight-bold); }
+
+
+/* =========================
+   Line height: line-
+   ========================= */
+
+.line-none { line-height: var(--line-height-none); }
+
+.line-tight { line-height: var(--line-height-tight); }
+
+.line-snug { line-height: var(--line-height-snug); }
+
+.line-normal { line-height: var(--line-height-normal); }
+
+.line-relaxed { line-height: var(--line-height-relaxed); }
+
+.line-loose { line-height: var(--line-height-loose); }
+
+
+/* =========================
+   Text alignment
+   ========================= */
+
+.text-left { text-align: left; }
+
+.text-center { text-align: center; }
+
+.text-right { text-align: right; }
+
+.text-justify { text-align: justify; }
+
+
+/* =========================
+   Text transform
+   ========================= */
+
+.text-uppercase { text-transform: uppercase; }
+
+.text-lowercase { text-transform: lowercase; }
+
+.text-capitalize { text-transform: capitalize; }
+
+
+/* =========================
+   Text decoration
+   ========================= */
+
+.text-underline { text-decoration: underline; }
+
+.text-line-through { text-decoration: line-through; }
+
+.text-no-decoration { text-decoration: none; }
+
+
+/* =========================
+   Text overflow
+   ========================= */
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.text-clamp-2 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.text-clamp-3 {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+
+/* =========================
+   Text wrapping
+   ========================= */
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.text-wrap {
+    white-space: normal;
+}
+
+.text-break {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+
+/* =========================
+   Presets útiles para mobile
+   ========================= */
+
+.text-display {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+}
+
+.text-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+}
+
+.text-subtitle {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-snug);
+}
+
+.text-body {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+}
+
+.text-body-sm {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+}
+
+.text-caption {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-snug);
+}
+
+.text-overline {
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-none);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}

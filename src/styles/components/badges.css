@@ -1,0 +1,19 @@
+.badge {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-2xs);
+    gap: var(--space-xs);
+    cursor: pointer;
+    background-color: var(--color-badge);
+    border-radius: var(--radius-pill);
+    text-wrap: nowrap;
+    padding: var(--space-xs) var(--space-sm);
+    font-weight: var(--font-weight-semibold);
+}
+
+.badge-without-bg { background: none; }
+
+.badge.is-active {
+    color: var(--color-white);
+    background-color: var(--color-neutral-900);
+}

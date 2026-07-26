@@ -1,66 +1,54 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+import Icons from "@/components/Icons/Icons";
+import Loading from "@/components/views/Loading";
+import { useAuth } from "@/context/AuthContext";
+import { orders } from "@/db/orders.db";
+import { FILTERS_ORDERS } from "@/helpers/filters.helper";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+export default function Page () {
+
+    const { user, loadAuth } = useAuth();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (!loadAuth && !user) {
+            router.replace('/auth/login?next=/orders');
+        }
+    }, [loadAuth, user, router]);
+
+    if (loadAuth || !user) {
+        return <Loading />;
+    }
+
+    return (
+        <div className="w-full h-full py-md scroll-y">
+            <div className="w-full flex flex-col mb-md gap-sm">
+                <ul className="w-full flex items-center gap-xs scroll-x px-md">
+                    {FILTERS_ORDERS.map((itm, idx) => (
+                        <li key={idx} className={`badge`}>{itm.label}</li>
+                    ))}
+                </ul>
+                <div className="w-full px-md">
+                    <div className="relative w-full">
+                        <input type="text" className="w-full py-sm px-md bg-surface rounded-full text-xs" placeholder="Código del pedido" />
+                        <span className="absolute h-full center" style={{top: 0, right: '10px'}}><Icons name={'search'} size={20} color="#888" /></span>
+                    </div>
+                </div>
+            </div>
+            <ul>
+                {orders.length > 0 ? (
+                    orders.map((order) => (
+                        <li key={order.id}>
+                            <div>{order.order_code}</div>
+                        </li>
+                    ))
+                ) : ( 
+                    <p>No tienes órdenes aún</p> 
+                )}
+            </ul>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    )
 }

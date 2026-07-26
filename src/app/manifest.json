@@ -1,0 +1,22 @@
+{
+    "name": "Ándale Socios",
+    "short_name": "Socios",
+    "description": "Gestión de pedidos, carta digital y operación para negocios afiliados a Ándale Ya!.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "/apple-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ]
+}
