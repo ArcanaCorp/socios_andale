@@ -1,9 +1,15 @@
 'use client';
 
-import { getBusinessOrders, updateBusinessOrderStatus } from "@/services/business-orders.service";
+import { getBusinessOrderById, getBusinessOrders, updateBusinessOrderStatus } from "@/services/business-orders.service";
+
+import { db } from "@/libs/supabase";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { useNewOrderSound } from "./useNewOrderSound";
 
 export function useBusinessOrders(businessId) {
+
+    const { enabled: soundEnabled, enableSound, playNewOrderSound } = useNewOrderSound();
 
     const [orders, setOrders] = useState([]);
     const [activeStatus, setActiveStatus] = useState("all");
@@ -36,10 +42,72 @@ export function useBusinessOrders(businessId) {
         }
     }, [ businessId, activeStatus, search ]);
 
-    const updateOrderStatus = async ({ orderId, status, extraPayload = {} }) => {
-        
+    const addRealtimeOrder = async (orderId) => {
         try {
-            
+            const fullOrder = await getBusinessOrderById({ businessId, orderId});
+
+            if (!fullOrder) return;
+
+            setOrders((prev) => {
+                const alreadyExists = prev.some((order) => order.id === fullOrder.id);
+
+                if (alreadyExists) {
+                    return prev.map((order) =>
+                        order.id === fullOrder.id ? fullOrder : order
+                    );
+                }
+
+                if (activeStatus !== "all" && fullOrder.status !== activeStatus) {
+                    return prev;
+                }
+
+                return [
+                    fullOrder,
+                    ...prev
+                ];
+            });
+
+            toast.success("Nuevo pedido recibido", {
+                description: `Pedido ${fullOrder.order_code} por S/ ${Number(fullOrder.total || 0).toFixed(2)}`
+            });
+
+            await playNewOrderSound();
+
+        } catch (error) {
+            console.error("Error adding realtime order:", error);
+        }
+    };
+
+    const updateRealtimeOrder = async (orderId) => {
+        try {
+
+            const fullOrder = await getBusinessOrderById({ businessId, orderId });
+
+            if (!fullOrder) return;
+
+            setOrders((prev) => {
+                const exists = prev.some((order) => order.id === fullOrder.id);
+
+                if (!exists) return prev;
+
+                if (activeStatus !== "all" && fullOrder.status !== activeStatus) {
+                    return prev.filter((order) => order.id !== fullOrder.id);
+                }
+
+                return prev.map((order) =>
+                    order.id === fullOrder.id ? fullOrder : order
+                );
+            });
+
+        } catch (error) {
+            console.error("Error updating realtime order:", error);
+        }
+    };
+
+    const updateOrderStatus = async ({orderId,status,extraPayload = {}}) => {
+
+        try {
+
             if (!businessId || !orderId) {
                 return {
                     ok: false,
@@ -50,21 +118,11 @@ export function useBusinessOrders(businessId) {
 
             setUpdatingOrderId(orderId);
 
-            const updatedOrder = await updateBusinessOrderStatus({
-                orderId,
-                businessId,
-                status,
-                extraPayload
-            });
+            const updatedOrder = await updateBusinessOrderStatus({ orderId, businessId, status, extraPayload });
 
             setOrders((prev) =>
                 prev.map((order) =>
-                    order.id === orderId
-                        ? {
-                            ...order,
-                            ...updatedOrder
-                        }
-                        : order
+                    order.id === orderId ? { ...order, ...updatedOrder } : order
                 )
             );
 
@@ -104,7 +162,63 @@ export function useBusinessOrders(businessId) {
         if (!businessId) return;
 
         loadOrders();
-    }, [businessId, activeStatus]);
+    }, [businessId,activeStatus]);
+
+    useEffect(() => {
+        if (!businessId) return;
+
+        const channel = db
+            .channel(`business-orders-${businessId}`)
+            .on(
+                "postgres_changes",
+                {
+                    event: "INSERT",
+                    schema: "public",
+                    table: "foodie_orders",
+                    filter: `company_id=eq.${businessId}`
+                },
+                async (payload) => {
+                    const orderId = payload?.new?.id;
+
+                    if (!orderId) return;
+
+                    await addRealtimeOrder(orderId);
+                }
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event: "UPDATE",
+                    schema: "public",
+                    table: "foodie_orders",
+                    filter: `company_id=eq.${businessId}`
+                },
+                async (payload) => {
+                    const orderId = payload?.new?.id;
+
+                    if (!orderId) return;
+
+                    await updateRealtimeOrder(orderId);
+                }
+            )
+            .subscribe((status) => {
+                if (status === "SUBSCRIBED") {
+                    console.log("Realtime conectado a pedidos:", businessId);
+                }
+
+                if (status === "CHANNEL_ERROR") {
+                    console.error("Error en canal realtime de pedidos");
+                }
+            });
+
+        return () => {
+            db.removeChannel(channel);
+        };
+
+    }, [
+        businessId,
+        activeStatus
+    ]);
 
     return {
         orders,
@@ -122,6 +236,9 @@ export function useBusinessOrders(businessId) {
         errorOrders,
 
         loadOrders,
-        updateOrderStatus
+        updateOrderStatus,
+        
+        soundEnabled,
+        enableSound,
     };
 }

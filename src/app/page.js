@@ -19,7 +19,7 @@ export default function Page () {
 
     const businessId = activeBusiness?.id;
 
-    const { orders, activeStatus, setActiveStatus, search, setSearch, loadingOrders, updatingOrderId, errorOrders, loadOrders, updateOrderStatus } = useBusinessOrders(businessId);
+    const { orders, activeStatus, setActiveStatus, search, setSearch, loadingOrders, updatingOrderId, errorOrders, loadOrders, updateOrderStatus, soundEnabled, enableSound } = useBusinessOrders(businessId);
 
     const handleSearch = (event) => {
         event.preventDefault();
@@ -82,6 +82,13 @@ export default function Page () {
                 </div>
             ) : (
                 <ul className="w-full flex flex-col gap-sm px-md">
+                    {!soundEnabled && (
+                        <div className="w-full px-md mb-md">
+                            <button type="button" className="w-full h rounded-full bg-primary text-white text-xs text-semibold" style={{ "--h": "40px" }} onClick={enableSound}>
+                                Activar sonido de nuevos pedidos
+                            </button>
+                        </div>
+                    )}
                     {orders.length > 0 ? (
                         orders.map((order) => (
                             <CardOrder key={order.id} order={order} updating={updatingOrderId === order.id} onUpdateStatus={handleUpdateStatus}/>

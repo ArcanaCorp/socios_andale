@@ -80,3 +80,33 @@ export async function updateBusinessOrderStatus({ orderId, businessId, status, e
 
     return data;
 }
+
+export async function getBusinessOrderById({ businessId, orderId }) {
+    
+    if (!businessId || !orderId) return null;
+
+    const { data, error } = await db
+        .from("foodie_orders")
+        .select(`
+            *,
+            foodie_order_items (
+                id,
+                product_id,
+                product_name,
+                product_description,
+                product_image_url,
+                quantity,
+                unit_price,
+                subtotal
+            )
+        `)
+        .eq("id", orderId)
+        .eq("company_id", businessId)
+        .maybeSingle();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}
