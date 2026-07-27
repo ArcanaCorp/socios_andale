@@ -3,15 +3,12 @@
 import CardOrder from "@/components/Card/CardOrder";
 import Icons from "@/components/Icons/Icons";
 import Loading from "@/components/views/Loading";
-import { useAuth } from "@/context/AuthContext";
 import { useBusinessAccess } from "@/context/BusinessAccessContext";
-import { orders } from "@/db/orders.db";
-import { FILTERS_ORDERS } from "@/helpers/filters.helper";
 import { ORDER_FILTERS } from "@/helpers/orders.helper";
 import { useBusinessOrders } from "@/hooks/useBusinessOrders";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
+
+import ButtonNotifications from "@/components/Buttons/ButtonNotifications";
 
 export default function Page () {
 
@@ -89,6 +86,7 @@ export default function Page () {
                             </button>
                         </div>
                     )}
+                    <ButtonNotifications/>
                     {orders.length > 0 ? (
                         orders.map((order) => (
                             <CardOrder key={order.id} order={order} updating={updatingOrderId === order.id} onUpdateStatus={handleUpdateStatus}/>
