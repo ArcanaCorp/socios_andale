@@ -9,9 +9,11 @@ import { useBusinessOrders } from "@/hooks/useBusinessOrders";
 import { toast } from "sonner";
 
 import ButtonNotifications from "@/components/Buttons/ButtonNotifications";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Page () {
 
+    const { user } = useAuth();
     const { activeBusiness, loadingBusinessAccess } = useBusinessAccess();
 
     const businessId = activeBusiness?.id;
@@ -86,7 +88,7 @@ export default function Page () {
                             </button>
                         </div>
                     )}
-                    <ButtonNotifications/>
+                    <ButtonNotifications activeBusiness={activeBusiness} user={user?.id} />
                     {orders.length > 0 ? (
                         orders.map((order) => (
                             <CardOrder key={order.id} order={order} updating={updatingOrderId === order.id} onUpdateStatus={handleUpdateStatus}/>
