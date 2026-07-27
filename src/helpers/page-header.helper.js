@@ -2,6 +2,24 @@
 
 const PAGE_HEADER_RULES = [
     {
+        match: (pathname) => pathname === "/business/visibility", title: 'Visibilidad pública'
+    },
+    {
+        match: (pathname) => pathname === "/business/schedule", title: 'Horarios'
+    },
+    {
+        match: (pathname) => pathname === "/business/payments", title: "Métodos de pago",
+    },
+    {
+        match: (pathname) => pathname === "/business/orders", title: 'Pedidos y atención'
+    },
+    {
+        match: (pathname) => pathname === "/business/contact", title: 'Ubicación y contacto'
+    },
+    {
+        match: (pathname) => pathname === "/business/profile", title: "Perfil del negocio",
+    },
+    {
         match: (pathname) => pathname === "/menu/created", title: "Crear nuevo plato",
     },
     {

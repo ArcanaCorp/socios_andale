@@ -1,54 +1,100 @@
 'use client';
 
+import CardOrder from "@/components/Card/CardOrder";
 import Icons from "@/components/Icons/Icons";
 import Loading from "@/components/views/Loading";
 import { useAuth } from "@/context/AuthContext";
+import { useBusinessAccess } from "@/context/BusinessAccessContext";
 import { orders } from "@/db/orders.db";
 import { FILTERS_ORDERS } from "@/helpers/filters.helper";
+import { ORDER_FILTERS } from "@/helpers/orders.helper";
+import { useBusinessOrders } from "@/hooks/useBusinessOrders";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
 export default function Page () {
 
-    const { user, loadAuth } = useAuth();
-    const router = useRouter();
+    const { activeBusiness, loadingBusinessAccess } = useBusinessAccess();
 
-    useEffect(() => {
-        if (!loadAuth && !user) {
-            router.replace('/auth/login?next=/orders');
-        }
-    }, [loadAuth, user, router]);
+    const businessId = activeBusiness?.id;
 
-    if (loadAuth || !user) {
-        return <Loading />;
+    const { orders, activeStatus, setActiveStatus, search, setSearch, loadingOrders, updatingOrderId, errorOrders, loadOrders, updateOrderStatus } = useBusinessOrders(businessId);
+
+    const handleSearch = (event) => {
+        event.preventDefault();
+        loadOrders();
+    };
+
+    const handleUpdateStatus = async (orderId, status) => {
+        const result = await updateOrderStatus({ orderId, status});
+        if (!result.ok) return toast.warning("Alerta", { description: result.message });
+        toast.success("Orden actualizada", {description: result.message});
+    };
+
+    if (loadingBusinessAccess) return <Loading />;
+
+    if (!activeBusiness) {
+        return (
+            <main className="w-full h-full grid-center p-md">
+                <p className="text-sm text-muted text-center">No tienes un negocio activo.</p>
+            </main>
+        );
     }
 
     return (
+
         <div className="w-full h-full py-md scroll-y">
+            
             <div className="w-full flex flex-col mb-md gap-sm">
+
                 <ul className="w-full flex items-center gap-xs scroll-x px-md">
-                    {FILTERS_ORDERS.map((itm, idx) => (
-                        <li key={idx} className={`badge`}>{itm.label}</li>
+                    {ORDER_FILTERS.map((item) => (
+                        <li key={item.value}>
+                            <button type="button" className={`badge ${activeStatus === item.value ? "is-active" : ""}`} onClick={() => setActiveStatus(item.value)}>{item.label}</button>
+                        </li>
                     ))}
                 </ul>
-                <div className="w-full px-md">
+
+                <form className="w-full px-md" onSubmit={handleSearch}>
                     <div className="relative w-full">
-                        <input type="text" className="w-full py-sm px-md bg-surface rounded-full text-xs" placeholder="Código del pedido" />
-                        <span className="absolute h-full center" style={{top: 0, right: '10px'}}><Icons name={'search'} size={20} color="#888" /></span>
+                        <input type="text" className="w-full py-sm px-md bg-surface rounded-full text-xs" placeholder="Código del pedido" value={search} onChange={(event) => setSearch(event.target.value)}/>
+                        <button type="submit" className="absolute h-full center" style={{top: 0, right: "10px"}}>
+                            <Icons name="search" size={20} color="#888"/>
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+            {errorOrders && (
+                <div className="w-full px-md mb-md">
+                    <div className="w-full bg-danger-light rounded-md p-md">
+                        <p className="text-sm text-danger">{errorOrders}</p>
+                        <button type="button" className="text-xs text-danger text-semibold mt-sm" onClick={loadOrders}>Reintentar</button>
                     </div>
                 </div>
-            </div>
-            <ul>
-                {orders.length > 0 ? (
-                    orders.map((order) => (
-                        <li key={order.id}>
-                            <div>{order.order_code}</div>
-                        </li>
-                    ))
-                ) : ( 
-                    <p>No tienes órdenes aún</p> 
-                )}
-            </ul>
+            )}
+
+            {loadingOrders ? (
+                <div className="w-full py-xl center">
+                    <p className="text-sm text-muted">Cargando órdenes...</p>
+                </div>
+            ) : (
+                <ul className="w-full flex flex-col gap-sm px-md">
+                    {orders.length > 0 ? (
+                        orders.map((order) => (
+                            <CardOrder key={order.id} order={order} updating={updatingOrderId === order.id} onUpdateStatus={handleUpdateStatus}/>
+                        ))
+                    ) : (
+                        <div className="w-full py-xl text-center">
+                            <p className="text-sm text-muted">No tienes órdenes aún.</p>
+                        </div>
+                    )}
+                </ul>
+            )}
+
         </div>
+
     )
 }
