@@ -12,7 +12,9 @@ export default function Tabs () {
     return (
         <nav className="w-full h" style={{"--h": "60px"}}>
             <ul className="w-full h-full px-md flex items-center justify-between">
-                {TABS.map((tab) => (
+                {TABS
+                .filter((t) => t.type === 'tabs')
+                .map((tab) => (
                     <li key={tab.id} className="w-full">
                         <Link href={tab.link} className={`flex flex-col items-center gap-2xs ${pathname === tab.link ? 'text-dark text-medium' : 'text-muted'}`}>
                             <Icons name={tab.icon} />

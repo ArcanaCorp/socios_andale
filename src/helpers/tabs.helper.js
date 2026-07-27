@@ -4,6 +4,7 @@ export const TABS = [
         label: 'Pedidos',
         icon: 'shopping',
         link: '/',
+        type: 'tabs',
         title: 'Historial de Pedidos'
     },
     {
@@ -11,6 +12,7 @@ export const TABS = [
         label: 'Tablero',
         icon: 'layout',
         link: '/tabler',
+        type: 'tabs',
         title: 'Resumen'
     },
     {
@@ -18,6 +20,7 @@ export const TABS = [
         label: 'Menú',
         icon: 'list',
         link: '/menu',
+        type: 'tabs',
         title: 'Menú'
     },
     {
@@ -25,6 +28,15 @@ export const TABS = [
         label: 'Más',
         icon: 'menu',
         link: '/mas',
+        type: 'tabs',
         title: 'Más'
+    },
+    {
+        id: 5,
+        label: '',
+        icon: '',
+        link: '/menu/created',
+        type: 'page',
+        title: 'Crear nuevo plato'
     }
 ]

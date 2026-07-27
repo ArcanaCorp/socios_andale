@@ -11,7 +11,7 @@ export default function Header () {
     return (
         <header className="w-full h" style={{"--h": "60px"}}>
             <div className="w-full h-full px-md flex items-center">
-                <h2>{pageInfo.title}</h2>
+                <h2>{pageInfo.title || 'Pagina'}</h2>
             </div>
         </header>
     )
