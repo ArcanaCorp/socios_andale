@@ -70,16 +70,8 @@ export default function ButtonNotifications({ activeBusiness, user }) {
     return (
         <>
             {!checkingPush && !pushEnabled && (
-                <button
-                    type="button"
-                    className="w-full h rounded-full bg-primary text-white text-xs text-semibold"
-                    style={{ "--h": "40px" }}
-                    onClick={handleEnablePush}
-                    disabled={activatingPush}
-                >
-                    {activatingPush
-                        ? "Activando notificaciones..."
-                        : "Activar notificaciones push"}
+                <button type="button" className="w-full h rounded-full bg-primary text-white text-xs text-semibold" style={{ "--h": "40px" }} onClick={handleEnablePush} disabled={activatingPush}>
+                    {activatingPush ? "Activando notificaciones..." : "Activar notificaciones push"}
                 </button>
             )}
         </>

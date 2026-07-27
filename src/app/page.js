@@ -75,20 +75,24 @@ export default function Page () {
                 </div>
             )}
 
+            {!soundEnabled && (
+                <div className="w-full px-md mb-md">
+                    <button type="button" className="w-full h rounded-full bg-primary text-white text-xs text-semibold" style={{ "--h": "40px" }} onClick={enableSound}>
+                        Activar sonido de nuevos pedidos
+                    </button>
+                </div>
+            )}
+
+            <div className="w-full px-md mb-md">
+                <ButtonNotifications activeBusiness={activeBusiness} user={user}/> 
+            </div>
+
             {loadingOrders ? (
                 <div className="w-full py-xl center">
                     <p className="text-sm text-muted">Cargando órdenes...</p>
                 </div>
             ) : (
                 <ul className="w-full flex flex-col gap-sm px-md">
-                    {!soundEnabled && (
-                        <div className="w-full px-md mb-md">
-                            <button type="button" className="w-full h rounded-full bg-primary text-white text-xs text-semibold" style={{ "--h": "40px" }} onClick={enableSound}>
-                                Activar sonido de nuevos pedidos
-                            </button>
-                        </div>
-                    )}
-                    <ButtonNotifications activeBusiness={activeBusiness} user={user?.id} />
                     {orders.length > 0 ? (
                         orders.map((order) => (
                             <CardOrder key={order.id} order={order} updating={updatingOrderId === order.id} onUpdateStatus={handleUpdateStatus}/>
