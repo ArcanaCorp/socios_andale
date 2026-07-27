@@ -30,10 +30,8 @@ export default function MasPage () {
     };
 
     return (
-        <div className="w-full h" style={{"--h": "calc(100dvh - 60px)"}}>
-            <div className="w-full h-full p-md scroll-y">
-                <button onClick={handleLogout}>{loading ? 'Cerrando...' : 'Cerrar sesión'}</button>
-            </div>
+        <div className="w-full h-full p-md scroll-y">
+            <button onClick={handleLogout}>{loading ? 'Cerrando...' : 'Cerrar sesión'}</button>
         </div>
     )
 }

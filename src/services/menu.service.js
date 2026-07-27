@@ -60,3 +60,72 @@ export async function getMyFoodieMenu(foodieId) {
         dishes
     };
 }
+
+export async function getMyFoodieDishById({ dishId, foodieId }) {
+
+    if (!dishId || !foodieId) return null;
+
+    const { data, error } = await db
+        .from("foodie_dishes")
+        .select(`
+            *,
+            foodie_categories (
+                id,
+                name
+            )
+        `)
+        .eq("id", dishId)
+        .eq("foodie_id", foodieId)
+        .eq("is_active", true)
+        .maybeSingle();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}
+
+export async function updateMyFoodieDish({ dishId, foodieId, payload }) {
+    
+    if (!dishId || !foodieId) {
+        throw new Error("No se encontró el plato o el negocio.");
+    }
+
+    const { data, error } = await db
+        .from("foodie_dishes")
+        .update(payload)
+        .eq("id", dishId)
+        .eq("foodie_id", foodieId)
+        .select("*")
+        .single();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}
+
+export async function deleteMyFoodieDish({ dishId, foodieId }) {
+    if (!dishId || !foodieId) {
+        throw new Error("No se encontró el plato o el negocio.");
+    }
+
+    const { data, error } = await db
+        .from("foodie_dishes")
+        .update({
+            is_active: false,
+            is_available: false
+        })
+        .eq("id", dishId)
+        .eq("foodie_id", foodieId)
+        .select("*")
+        .single();
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return data;
+}

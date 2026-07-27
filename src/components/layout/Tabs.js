@@ -10,7 +10,7 @@ export default function Tabs () {
     const pathname = usePathname();
 
     return (
-        <nav className="w-full h" style={{"--h": "60px"}}>
+        <nav className="w-full h bg-white" style={{"--h": "60px", boxShadow: "0 0 4px 4px rgb(209 209 209 / 20%)"}}>
             <ul className="w-full h-full px-md flex items-center justify-between">
                 {TABS
                 .filter((t) => t.type === 'tabs')

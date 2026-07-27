@@ -20,6 +20,7 @@ import {
     IconLayout,
     IconList,
     IconMenu,
+    IconTrash,
 } from "@tabler/icons-react";
 
 const ICONS = {
@@ -43,7 +44,8 @@ const ICONS = {
     shopping: IconShoppingBag,
     layout: IconLayout,
     list: IconList,
-    menu: IconMenu
+    menu: IconMenu,
+    trash: IconTrash
 };
 
 export default function Icons({name, strokeWidth = 2, color = "currentColor", size = 20, ...props}) {

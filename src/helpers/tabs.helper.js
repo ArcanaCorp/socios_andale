@@ -30,13 +30,5 @@ export const TABS = [
         link: '/mas',
         type: 'tabs',
         title: 'Más'
-    },
-    {
-        id: 5,
-        label: '',
-        icon: '',
-        link: '/menu/created',
-        type: 'page',
-        title: 'Crear nuevo plato'
     }
 ]

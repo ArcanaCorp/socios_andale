@@ -86,9 +86,9 @@ export default function MenuPage () {
             </section>
             <section className="w-full flex flex-col gap-md">
                 <div className="w-full flex gap-xs scroll-x px-md">
-                    <button type="button" className={`badge ${ !activeCategory ? "bg-primary text-white" : ""}`} onClick={() => setActiveCategory(null)}>Todos</button>
+                    <button type="button" className={`badge ${ !activeCategory ? "is-active" : ""}`} onClick={() => setActiveCategory(null)}>Todos</button>
                     {categories.map((category) => (
-                        <button key={category.id} type="button" className={`badge ${activeCategory === category.id ? "bg-primary text-white" : ""}`} onClick={() => setActiveCategory(category.id)} >{category.name}</button>
+                        <button key={category.id} type="button" className={`badge ${activeCategory === category.id ? "is-active" : ""}`} onClick={() => setActiveCategory(category.id)} >{category.name}</button>
                     ))}
                 </div>
                 <ul className="w-full flex flex-col gap-sm px-md">
